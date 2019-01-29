@@ -70,12 +70,28 @@ def main(argv):
 
 
 #Building an iterator over training batches 
-def build_input_pipeline(preprocessed_data_path, batch_size):
+
+PATH = os.getcwd()
+preprocessed_data_path = PATH+'/data1.csv'
+
+#Building an iterator over training batches 
+def build_input_pipeline(preprocessed_data_path,batch_size):
+    np.save('work',preprocessed_data_path)
+    with np.load('work.npy')as loaded_data:
+        loaded_data = loaded_data.astype(np.float32)
+        print(loaded_data)
+        features = loaded_data.drop(['class'],axis =1, inplace =True)
+        labels = loaded_data['class']
+        features = features.astype(np.float32)
+        labels = labels.astype(np.float32)
+
+
+""""def build_input_pipeline(preprocessed_data_path, batch_size):
     with np.load(preprocessed_data_path) as loaded_data:
         features = loaded_data.drop(['class'],axis =1, inplace =True)
         labels = data['class']
         features = features.astype(np.float32)
-        labels = labels.astype(np.float32)
+        labels = labels.astype(np.float32)""""
 #Splitting into training, validation and testing sets
 random.shuffle(features)
 split_1 = int(0.8*len(features))
