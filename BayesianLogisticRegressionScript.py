@@ -20,6 +20,7 @@ from matplotlib.backends import backend_agg
 import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
+import matplotlib.pyplot as plt 
 from sklearn.metrics import roc_curve
 
 tfd = tfp.distributions
@@ -93,6 +94,7 @@ def build_input_pipeline(preprocessed_data_path,batch_size):
         features = features.astype(np.float32)
         labels = labels.astype(np.float32)""""
 #Splitting into training, validation and testing sets
+
 random.shuffle(features)
 split_1 = int(0.8*len(features))
 split_2 = int(0.9*len(features))
@@ -199,12 +201,19 @@ with tf.Session() as sess:
         candidate_w_bs.append((w, b))
 
 
-  def generate_ROC_curve():
-    with tf.Session() as sess:
-       logits = sess.run([logits], feed_dict = {handle:test_handle})
-
-    roc_curve(np.array(test_labels), logits) # Logits, a tensor resulting from a graph evaluation, is a NumPy array
-
+  #def generate_ROC_curve():
+  with tf.Session() as sess:
+    logits = sess.run([logits], feed_dict = {handle:test_handle})
+  fpr,tpr, _ =  roc_curve(np.array(test_labels), logits) # Logits, a tensor resulting from a graph evaluation, is a NumPy array
+  plt.title('Recevier Operating Characteristics')
+  plt.plot(fpr,tpr, 'b', label = 'AUC' = % 0.2f' %roc_auc)
+  plt.legend(loc = 'lower right')
+  plt.plot([0,1],[0,1], 'r')
+  plt.xlm([0,1])
+  plt.ylm([0,1])
+  plt.ylabel('True Positive Rate')
+  plt.xlabel('False Positive Rate')
+  plt.show()
 
 if __name__ == "__main__":
   tf.app.run()
