@@ -215,6 +215,7 @@ with tf.name_scope("ROC"):
   plt.show()
          
 with tf.name_scope("Credible_interval):
+  logits = sess.run([logits], feed_dict = {handle:test_handle})
   credible_interval =[]
   modes = []
   for i in range(logits.shape[1]):
