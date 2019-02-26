@@ -21,6 +21,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
 import matplotlib.pyplot as plt 
+import seaborn as sns
 from sklearn.metrics import roc_curve
 
 tfd = tfp.distributions
@@ -200,10 +201,8 @@ with tf.Session() as sess:
         w, b = sess.run((w_draw, b_draw))
         candidate_w_bs.append((w, b))
 
-
-  #def generate_ROC_curve():
-  with tf.Session() as sess:
-    logits = sess.run([logits], feed_dict = {handle:test_handle})
+with tf.name_scope("ROC"):
+  logits = sess.run([logits], feed_dict = {handle:test_handle})
   fpr,tpr, _ =  roc_curve(np.array(test_labels), logits) # Logits, a tensor resulting from a graph evaluation, is a NumPy array
   plt.title('Recevier Operating Characteristics')
   plt.plot(fpr,tpr, 'b', label = 'AUC' = % 0.2f' %roc_auc)
@@ -214,7 +213,22 @@ with tf.Session() as sess:
   plt.ylabel('True Positive Rate')
   plt.xlabel('False Positive Rate')
   plt.show()
-
+         
+with tf.name_scope("Credible_interval):
+  credible_interval =[]
+  modes = []
+  for i in range(logits.shape[1]):
+    lb = np.percentile(logits[:, i], 2.5)
+    ub = np.percentile(logits[:, i], 97.5)
+    mode = np.mean(logits[:, i])
+    credible_intervals.append([lb, ub])
+    modes.append(mode)
+    lb, ub = np.exp(lb), np.exp(ub)
+    print(f'P({lb:.3f} < Odds Ratio < {ub:.3f}) = 0.95'))
+    fig, ax = plt.subplots(figsize=(8, 4))
+    sns.distplot(credible_interval, axlabel='Odds Ratio', ax=ax)
+    ax.set_title(f'Credible Interval: P({lb:.3f} < Odds Ratio < {ub:.3f}) = 0.95')
+    ax.axvspan(lb, ub, alpha=0.5, color='gray');
 if __name__ == "__main__":
   tf.app.run()
 
