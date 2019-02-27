@@ -206,7 +206,7 @@ with tf.Session() as sess:
 with tf.name_scope("ROC"):
   logits = sess.run([logits], feed_dict = {handle:test_handle})
   fpr,tpr, _ =  roc_curve(np.array(test_labels), logits) # Logits, a tensor resulting from a graph evaluation, is a NumPy array
-  plt.title('Recevier Operating Characteristics')
+  plt.title('Receiver Operating Characteristic')
   plt.plot(fpr,tpr, 'b', label = 'AUC' = % 0.2f' %roc_auc')
   plt.legend(loc = 'lower right')
   plt.plot([0,1],[0,1], 'r')
