@@ -1,3 +1,5 @@
+
+    
 #!/usr/bin/env python
 # coding: utf-8
 
@@ -93,7 +95,7 @@ def build_input_pipeline(preprocessed_data_path,batch_size):
         features = loaded_data.drop(['class'],axis =1, inplace =True)
         labels = data['class']
         features = features.astype(np.float32)
-        labels = labels.astype(np.float32)""""
+        labels = labels.astype(np.float32)"""
 #Splitting into training, validation and testing sets
 
 random.shuffle(features)
@@ -205,7 +207,7 @@ with tf.name_scope("ROC"):
   logits = sess.run([logits], feed_dict = {handle:test_handle})
   fpr,tpr, _ =  roc_curve(np.array(test_labels), logits) # Logits, a tensor resulting from a graph evaluation, is a NumPy array
   plt.title('Recevier Operating Characteristics')
-  plt.plot(fpr,tpr, 'b', label = 'AUC' = % 0.2f' %roc_auc)
+  plt.plot(fpr,tpr, 'b', label = 'AUC' = % 0.2f' %roc_auc')
   plt.legend(loc = 'lower right')
   plt.plot([0,1],[0,1], 'r')
   plt.xlm([0,1])
@@ -214,9 +216,9 @@ with tf.name_scope("ROC"):
   plt.xlabel('False Positive Rate')
   plt.show()
          
-with tf.name_scope("Credible_interval):
+with tf.name_scope("Credible_interval"):
   logits = sess.run([logits], feed_dict = {handle:test_handle})
-  credible_interval =[]
+  credible_intervals =[]
   modes = []
   for i in range(logits.shape[1]):
     lb = np.percentile(logits[:, i], 2.5)
@@ -225,7 +227,7 @@ with tf.name_scope("Credible_interval):
     credible_intervals.append([lb, ub])
     modes.append(mode)
     lb, ub = np.exp(lb), np.exp(ub)
-    print(f'P({lb:.3f} < Odds Ratio < {ub:.3f}) = 0.95'))
+    print(f'P({lb:.3f} < Odds Ratio < {ub:.3f}) = 0.95')
     fig, ax = plt.subplots(figsize=(8, 4))
     sns.distplot(credible_interval, axlabel='Odds Ratio', ax=ax)
     ax.set_title(f'Credible Interval: P({lb:.3f} < Odds Ratio < {ub:.3f}) = 0.95')
@@ -241,7 +243,4 @@ if __name__ == "__main__":
 
 
 # In[ ]:
-
-
-
 
