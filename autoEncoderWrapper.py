@@ -15,7 +15,7 @@ from keras.models import load_model
 
 def main():
 	# Pass args from cmd.
-	parser = ArgumentParser()
+	parser = argparse.ArgumentParser()
 	parser.add_argument("-ip", "--inputfilepath",
 			type=str, help="path to inputfile.")
 	parser.add_argument("-b", "--batch_size", default=100,
@@ -24,7 +24,7 @@ def main():
 			type=int, help="number of epochs to train for.")
 	parser.add_argument("-d", "--encoding_dim", default=3,
 			type=int, help="encdoing dimensions.")
-	parser.add_argument("-tr", "--training_mode", default=True
+	parser.add_argument("-tr", "--training_mode", default=True,
 			type=bool, help="Is the model being trained or Tested?")
 	args = parser.parse_args()
 
@@ -39,12 +39,12 @@ def main():
 	df = pd.read_csv(filePath)
 
 	# Check args.
-	assert batch_size > 0 and batch_size <= df.shape[0], \
+	assert batchSize > 0 and batchSize <= df.shape[0], \
 			"Batch size must be greater than 0 and less than or equal\
 			to the size of the loaded in."
 	assert epochs > 0, \
 			"Number of epochs must be greater than 0."
-	assert encodingDim > 0. \
+	assert encodingDim > 0, \
 			"Number of encoding dimensions must be greater than 0."
 
 	# Either enter into training mode or test.
@@ -65,7 +65,7 @@ def main():
 def train(df, epochs, encodingDim, batchSize):
 	ae.seedy(4)
 	print("Generating model...")
-	aeModel = ae.autoEncoder(encodingDim, df.to_numpy())
+	aeModel = ae.autoEncoder(encodingDim=encodingDim, data=df.as_matrix())
 	aeModel.encoder_decoder()
 	print("Fitting model...")
 	aeModel.fit(batch_size=batchSize, epochs=epochs)
@@ -90,7 +90,7 @@ def test(df):
 		encoder = load_model(r'./weights/encoder_weights.h5')
 		decoder = load_model(r'./weights/decoder_weights.h5')
 
-		inputs = df.to_numpy()
+		inputs = df.as_matrix()
 		x = encoder.predict(inputs)
 		y = decoder.predict(x)
 

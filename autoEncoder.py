@@ -27,14 +27,14 @@ class autoEncoder:
 		self.encodingDim = encodingDim
 		# If no sample data is passed through, it will create some on
 		# its own
-		if data == None:
+		if data is not None:
+			self.x = data
+		else:
 			# Create some data to pass in. (Change Later)
 			r = lambda: np.random.randint(1,3)
 			# Create an array to pass in data. (Randomly generated
 			# array in this case. Array of 3 random numbers.)
 			self.x = np.array([[r(), r(), r()] for _ in range(1000)])
-		else:
-			self.x = data
 		# Print the data set we've generated.
 		#print(self.x)
 
@@ -112,6 +112,7 @@ class autoEncoder:
 						batch_size=batch_size,
 						callbacks=[tbCallBack])
 
+
 	# Save the model (weights).
 	def save(self):
 		# Check to see if a previous save exists.
@@ -121,6 +122,7 @@ class autoEncoder:
 			self.encoder.save(r'./weights/encoder_weights.h5')
 			self.decoder.save(r'./weights/decoder_weights.h5')
 			self.model.save(r'./weights/ae_weights.h5')
+
 
 # Main program.
 if __name__ == '__main__':
